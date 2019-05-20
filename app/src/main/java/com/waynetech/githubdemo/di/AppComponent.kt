@@ -1,6 +1,7 @@
 package com.waynetech.githubdemo.di
 
 import com.waynetech.githubdemo.GithubDemoApplication
+import com.waynetech.githubdemo.data.Repository
 import dagger.Component
 import dagger.android.AndroidInjectionModule
 import javax.inject.Singleton
@@ -9,6 +10,7 @@ import javax.inject.Singleton
 @Component(modules = arrayOf(AndroidInjectionModule::class, AppModule::class, NetworkModule::class))
 interface AppComponent {
 
-    //TODO: Expose Repository
+    fun repo(): Repository
+
     fun inject(app: GithubDemoApplication)
 }

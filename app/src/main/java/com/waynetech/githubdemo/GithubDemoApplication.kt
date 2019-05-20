@@ -7,7 +7,7 @@ import com.waynetech.githubdemo.di.NetworkModule
 
 class GithubDemoApplication : Application() {
 
-    private val appComponent = DaggerAppComponent
+    internal val appComponent = DaggerAppComponent
         .builder()
         .appModule(AppModule(this))
         .networkModule(NetworkModule())

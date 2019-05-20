@@ -1,6 +1,9 @@
 package com.waynetech.githubdemo.di
 
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
+import com.waynetech.githubdemo.data.PullsService
+import com.waynetech.githubdemo.data.Repository
+import com.waynetech.githubdemo.data.RepositoryImpl
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
@@ -33,7 +36,15 @@ class NetworkModule {
             .build()
     }
 
-    //TODO: Provide pulls service
+    @Singleton
+    @Provides
+    fun providesPullsService(retrofit: Retrofit): PullsService {
+        return retrofit.create(PullsService::class.java)
+    }
 
-    //TODO: Provide repository
+    @Singleton
+    @Provides
+    fun providesRepository(repository: RepositoryImpl): Repository {
+        return repository
+    }
 }
