@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="avatar_size">80dp</dimen>
+
+    <dimen name="font_large">16sp</dimen>
+    <dimen name="font_slarge">18sp</dimen>
+    <dimen name="font_xlarge">20sp</dimen>
+    <dimen name="font_xxlarge">24sp</dimen>
+
+    <!--Grid conventions-->
+    <dimen name="grid_2">16dp</dimen>
+</resources>
