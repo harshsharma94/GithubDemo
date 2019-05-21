@@ -1,6 +1,8 @@
 package com.waynetech.githubdemo
 
 import android.os.Bundle
+import android.support.v4.content.ContextCompat
+import android.support.v7.widget.DividerItemDecoration
 import android.support.v7.widget.LinearLayoutManager
 import android.widget.Toast
 import com.jakewharton.rxbinding2.widget.RxTextView
@@ -31,8 +33,21 @@ class PullsActivity : BaseActivity(), PullsView {
         rvPulls.apply {
             adapter = this@PullsActivity.adapter
             layoutManager = LinearLayoutManager(this@PullsActivity, LinearLayoutManager.VERTICAL, false)
+            addItemDecoration(getDecoration(layoutManager as LinearLayoutManager))
+        }
+    }
 
-            //TODO: Item decoration
+    private fun getDecoration(lm: LinearLayoutManager): DividerItemDecoration {
+        return DividerItemDecoration(
+            this@PullsActivity,
+            lm.orientation
+        ).apply {
+            setDrawable(
+                ContextCompat.getDrawable(
+                    this@PullsActivity,
+                    R.drawable.drawable_divider
+                )!!
+            )
         }
     }
 
