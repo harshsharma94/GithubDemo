@@ -15,6 +15,7 @@ class PullsAdapter : BaseAdapter<PullsAdapter.ItemType>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder<*> {
         return when (viewType) {
             TYPE_PULL -> PullItemViewHolder(parent)
+            TYPE_INFO -> InfoItemViewHolder(parent)
             else -> throw IllegalStateException("Wrong Item Type")
         }
     }
@@ -27,6 +28,7 @@ class PullsAdapter : BaseAdapter<PullsAdapter.ItemType>() {
         val item = getItem(position)
         when (item) {
             is PullItem -> (vh as PullItemViewHolder).bind(item)
+            is InfoItem -> (vh as InfoItemViewHolder).bind(item)
         }
     }
 
@@ -48,7 +50,14 @@ class PullsAdapter : BaseAdapter<PullsAdapter.ItemType>() {
         }
     }
 
+    data class InfoItem(val info: String) : ItemType {
+        override fun getType(): Int {
+            return TYPE_INFO
+        }
+    }
+
     companion object {
         const val TYPE_PULL = 1
+        const val TYPE_INFO = 2
     }
 }

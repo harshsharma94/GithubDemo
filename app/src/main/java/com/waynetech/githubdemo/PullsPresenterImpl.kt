@@ -29,7 +29,7 @@ class PullsPresenterImpl @Inject constructor(private val repository: Repository)
     override fun refresh() {
 
         val disp = Observable.combineLatest(
-            view.getOwnerName().debounce(1000, TimeUnit.MILLISECONDS),//TODO: Size > 2
+            view.getOwnerName().debounce(1000, TimeUnit.MILLISECONDS),
             view.getRepoName().debounce(1000, TimeUnit.MILLISECONDS),
             BiFunction<CharSequence, CharSequence, Names> { ownerName, repoName ->
                 Names(ownerName.toString(), repoName.toString())
@@ -38,9 +38,9 @@ class PullsPresenterImpl @Inject constructor(private val repository: Repository)
                 it.ownerName.isNotEmpty() && it.repoName.isNotEmpty()
             }.switchMap {
                 view.showLoadingView(true)
-                repository.getPulls(it.ownerName, it.repoName)
-            }.onErrorReturn {
-                emptyList()
+                repository.getPulls(it.ownerName, it.repoName).onErrorResumeNext(
+                    Observable.just(emptyList())
+                )
             }.subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
@@ -61,6 +61,10 @@ class PullsPresenterImpl @Inject constructor(private val repository: Repository)
                 "#${it.number} ${it.user.login} wants to merge ${it.head.ref} into ${it.base.ref} "//TODO: Spannable and Strings.xml
             PullsAdapter.PullItem(it.user.avatar_url, it.body, desc)
         })
+
+        if (itemTypes.isEmpty()) {
+            itemTypes.add(PullsAdapter.InfoItem("Not found"))
+        }
 
         view.setItems(itemTypes)
         view.showLoadingView(false)
