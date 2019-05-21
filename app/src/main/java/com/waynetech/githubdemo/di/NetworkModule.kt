@@ -1,9 +1,7 @@
 package com.waynetech.githubdemo.di
 
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
-import com.waynetech.githubdemo.data.PullsService
-import com.waynetech.githubdemo.data.Repository
-import com.waynetech.githubdemo.data.RepositoryImpl
+import com.waynetech.githubdemo.data.*
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
@@ -46,5 +44,11 @@ class NetworkModule {
     @Provides
     fun providesRepository(repository: RepositoryImpl): Repository {
         return repository
+    }
+
+    @Singleton
+    @Provides
+    fun providesImageHandler(imageHandler: ImageHandlerImpl): ImageHandler {
+        return imageHandler
     }
 }

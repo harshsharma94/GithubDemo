@@ -11,7 +11,7 @@ class PullItemViewHolder(parent: ViewGroup) :
         with(data) {
             textPullTitle.setText(title)
             textPullDesc.setText(desc)
-            //TODO: Set Image
+            getImageHandler().with(avatarUrl, imageAvatar)
         }
     }
 }
