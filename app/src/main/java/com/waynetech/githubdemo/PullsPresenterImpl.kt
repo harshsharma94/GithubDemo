@@ -29,20 +29,20 @@ class PullsPresenterImpl @Inject constructor(private val repository: Repository)
     override fun refresh() {
 
         val disp = Observable.combineLatest(
-            view.getOwnerName().debounce(300, TimeUnit.MILLISECONDS).filter { !it.isEmpty() },//TODO: Size > 2
-            view.getRepoName().debounce(300, TimeUnit.MILLISECONDS).filter { !it.isEmpty() },
-            BiFunction<CharSequence, CharSequence, Names> { t1, t2 ->
-                Names(t1.toString(), t2.toString())
+            view.getOwnerName().debounce(1000, TimeUnit.MILLISECONDS),//TODO: Size > 2
+            view.getRepoName().debounce(1000, TimeUnit.MILLISECONDS),
+            BiFunction<CharSequence, CharSequence, Names> { ownerName, repoName ->
+                Names(ownerName.toString(), repoName.toString())
             })
-            .switchMap { repository.getPulls(it.ownerName, it.repoName) }
-            .subscribeOn(Schedulers.io())
+            .filter {
+                it.ownerName.isNotEmpty() && it.repoName.isNotEmpty()
+            }.switchMap {
+                view.showLoadingView(true)
+                repository.getPulls(it.ownerName, it.repoName)
+            }.onErrorReturn {
+                emptyList()
+            }.subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .doOnSubscribe {
-                view.showLoadingView(true)//TODO: Move to SwitchMap
-            }
-            .doOnTerminate {
-                view.showLoadingView(false)//TODO: onErrorResumeNext, do not terminate
-            }
             .subscribe(
                 {
                     handleResponse(it)
@@ -57,7 +57,6 @@ class PullsPresenterImpl @Inject constructor(private val repository: Repository)
         val itemTypes = mutableListOf<PullsAdapter.ItemType>()
 
         itemTypes.addAll(resp.map {
-            //val date = it.created_at
             val desc =
                 "#${it.number} ${it.user.login} wants to merge ${it.head.ref} into ${it.base.ref} "//TODO: Spannable and Strings.xml
             PullsAdapter.PullItem(it.user.avatar_url, it.body, desc)

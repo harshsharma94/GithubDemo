@@ -47,9 +47,11 @@ class PullsActivity : BaseActivity(), PullsView {
     }
 
     override fun showLoadingView(isLoading: Boolean) {
-        layoutLoader.apply {
-            isEnabled = isLoading
-            isRefreshing = isLoading
+        runOnUiThread {
+            layoutLoader.apply {
+                isEnabled = isLoading
+                isRefreshing = isLoading
+            }
         }
     }
 
