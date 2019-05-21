@@ -1,10 +1,17 @@
 package com.waynetech.githubdemo
 
 import android.os.Bundle
+import android.support.v7.widget.LinearLayoutManager
+import android.widget.Toast
+import com.jakewharton.rxbinding2.widget.RxTextView
 import com.waynetech.githubdemo.base.BaseActivity
+import io.reactivex.Observable
+import kotlinx.android.synthetic.main.activity_pulls.*
 import javax.inject.Inject
 
 class PullsActivity : BaseActivity(), PullsView {
+
+    private val adapter = PullsAdapter()
 
     @Inject
     lateinit var presenter: PullsPresenter
@@ -14,9 +21,51 @@ class PullsActivity : BaseActivity(), PullsView {
         setContentView(R.layout.activity_pulls)
 
         getActivityComponent()?.inject(this)
+
+        initView()
+
+        presenter.setView(this)
+    }
+
+    private fun initView() {
+        rvPulls.apply {
+            adapter = this@PullsActivity.adapter
+            layoutManager = LinearLayoutManager(this@PullsActivity, LinearLayoutManager.VERTICAL, false)
+
+            //TODO: Item decoration
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        presenter.subscribe()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        presenter.unsubscribe()
     }
 
     override fun showLoadingView(isLoading: Boolean) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        layoutLoader.apply {
+            isEnabled = isLoading
+            isRefreshing = isLoading
+        }
+    }
+
+    override fun setItems(items: List<PullsAdapter.ItemType>) {
+        adapter.setItems(items)
+    }
+
+    override fun getOwnerName(): Observable<CharSequence> {
+        return RxTextView.textChanges(etOwnerName)
+    }
+
+    override fun getRepoName(): Observable<CharSequence> {
+        return RxTextView.textChanges(etRepoName)
+    }
+
+    override fun showError() {
+        Toast.makeText(this, "Something went wrong", Toast.LENGTH_SHORT).show();//TODO: Strings.xml
     }
 }

@@ -52,6 +52,9 @@ dependencies {
 
     implementation 'de.hdodenhof:circleimageview:3.0.0'
 
+    implementation 'com.jakewharton.rxbinding2:rxbinding:2.0.0'
+    implementation "com.jakewharton.rxbinding2:rxbinding-kotlin:2.0.0"
+
     testImplementation 'junit:junit:4.12'
     testImplementation 'com.nhaarman.mockitokotlin2:mockito-kotlin:2.1.0'
 
